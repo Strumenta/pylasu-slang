@@ -1,0 +1,94 @@
+[project]
+name = "pylasu-slang-parser"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Lorenzo Addazi", email = "lorenzo.addazi@strumenta.com"},
+]
+dependencies = [
+    "numpy>=1.24.4",
+    "antlr4-python3-runtime==4.9.3",
+    "pylasu>=0.7.0",
+    "typer[all]>=0.9.0",
+]
+requires-python = ">=3.8"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project.scripts]
+slang = "slang.cli:app"
+
+[tool.coverage.run]
+omit = [
+    "__init__.py",
+    "__main__.py",
+    "*/slang/cli.py",
+    "*/slang/parser/antlr/*",
+    "*/slang/parser/pylasu/errors.py",
+    "*/slang/parser/pylasu/transformations.py",
+    "*/slang/ast/serializers.py",
+]
+
+[tool.ruff]
+exclude = [
+    "*/slang/parser/antlr/*"
+]
+line-length = 99
+indent-width = 4
+target-version = "py38"
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = [
+    "F401",
+    "F403",
+    "E402"
+]
+
+[tool.ruff.lint]
+select = [
+    'E', # pycodestyle
+    'F', # Pyflakes
+    'UP', # pyupgrade
+    'B', # flake8-bugbear
+    'SIM', # flake8-simplify
+    'I' # isort
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = false
+docstring-code-line-length = "dynamic"
+
+[tool.pdm]
+package-type = "library"
+
+[tool.pdm.scripts]
+slang = { call = "slang.cli:app" }
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "tox>=4.11.4",
+    "tox-pdm>=0.7.0",
+]
+antlr = [
+    "antlr4-tools>=0.2.1",
+]
+ruff = [
+    "ruff>=0.1.11",
+]
+pytest = [
+    "pytest>=7.4.4",
+    "pytest-cov>=4.1.0",
+]
+docs = [
+    "sphinx>=7.1.2",
+    "sphinx-rtd-theme>=2.0.0",
+]
+
