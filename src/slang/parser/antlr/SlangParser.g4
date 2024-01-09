@@ -13,15 +13,15 @@ function:
     LBRACE statements+=statement* RBRACE
 ;
 
-statement
-    : RETURN value=expression COLON                                                         #returnStatement
-    | PRINT argument=expression COLON                                                       #printStatement
-    | IF LPAREN condition=expression RPAREN                     
-        (LBRACE positive_branch+=statement* RBRACE | positive_branch+=statement)
-        (ELSE (LBRACE negative_branch+=statement* RBRACE | negative_branch+=statement))?    #conditionalStatement
-    | name=NAME BND value=expression COLON                                                  #bindingStatement
-    | expression COLON                                                                      #expressionStatement
-    ;
+    statement
+        : RETURN value=expression COLON                                                         #returnStatement
+        | PRINT argument=expression COLON                                                       #printStatement
+        | IF LPAREN condition=expression RPAREN
+            (LBRACE positive_branch+=statement* RBRACE | positive_branch+=statement)
+            (ELSE (LBRACE negative_branch+=statement* RBRACE | negative_branch+=statement))?    #conditionalStatement
+        | name=NAME BND value=expression COLON                                                  #bindingStatement
+        | expression COLON                                                                      #expressionStatement
+        ;
 
 expression
     : LPAREN expression RPAREN                                                              #groupingExpression
