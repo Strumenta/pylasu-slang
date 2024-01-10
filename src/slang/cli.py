@@ -10,7 +10,7 @@ from typer import Argument, Typer
 from typing_extensions import Annotated
 
 from slang.ast.serializers import serialize_result
-from slang.parser import parse_file
+from slang.parser import parse_file, parse_string
 
 app = Typer()
 parser_app = Typer()
@@ -52,7 +52,7 @@ def build_report(parse_result: Result):
 @parser_app.command("string", help="Parse Slang code from a string.")
 @track_progress(description="Parsing")
 def from_string(code: Annotated[str, Argument(help="The string containing Slang code.")]):
-    return build_report(parse_file(code))
+    return build_report(parse_string(code))
 
 
 @parser_app.command("file", help="Parse Slang code from a file.")

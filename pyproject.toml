@@ -1,6 +1,6 @@
 [project]
 name = "pylasu-slang-parser"
-version = "0.1.0"
+version = "0.1.1"
 description = "Default template for PDM package"
 authors = [
     {name = "Lorenzo Addazi", email = "lorenzo.addazi@strumenta.com"},
