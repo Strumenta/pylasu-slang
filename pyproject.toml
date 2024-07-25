@@ -65,9 +65,9 @@ line-ending = "auto"
 docstring-code-format = false
 docstring-code-line-length = "dynamic"
 
-[tool.pdm]
-package-type = "library"
 
+[tool.pdm]
+distribution = true
 [tool.pdm.scripts]
 slang = { call = "slang.cli:app" }
 
