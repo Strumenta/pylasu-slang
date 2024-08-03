@@ -4,15 +4,21 @@ import pytest
 from pylasu.model import Node
 from slang.ast.nodes import (
     Addition,
+    Binding,
     Conditional,
+    ForLoop,
     Function,
+    GreaterThan,
     Invocation,
     LessThanEquals,
+    LessThan,
     Literal,
+    Print,
     Reference,
     Return,
     Subtraction,
-    Workspace,
+    WhileLoop,
+    Workspace
 )
 from slang.ast.serializers import serialize_node
 from slang.parser import parse_file, parse_string
@@ -51,13 +57,6 @@ def check_ast_from_file():
 
     return _
 
-
-def test_slang_parse_string(check_ast_from_string):
-    check_ast_from_string("fibonacci", FIBONACCI_WORKSPACE)
-
-
-def test_slang_parse_file(check_ast_from_file):
-    check_ast_from_file("fibonacci", FIBONACCI_WORKSPACE)
 
 
 FIBONACCI_WORKSPACE = Workspace(
@@ -105,3 +104,57 @@ FIBONACCI_WORKSPACE = Workspace(
         )
     ]
 )
+
+TEST_WORKSPACE=Workspace(
+    functions=[
+        Function(name='test',
+                 parameters=['n'],
+                 statements=[
+                     Conditional(
+                         condition=GreaterThan(left=Reference(target='n'), right=Literal(value='0')),
+                         positive_branch=[
+                                    WhileLoop(
+                                        condition=LessThan(left=Reference(target='n'), right=Literal(value='5')),
+                                        statements=[
+                                            ForLoop(
+                                                variable='i',
+                                                start=Literal(value='0'),
+                                                end=Reference(target='n'),
+                                                interval=Literal(value='1'),
+                                                statements=[
+                                                    Print(argument=Reference(target='i')),
+                                                    Binding(name='n',
+                                                            value=Addition(
+                                                                left=Reference(target='n'),
+                                                                right=Literal(value='1'))
+                                                            )
+                                                ]
+                                            )
+                                        ]
+                                    )
+                         ],
+                         negative_branch=[]
+                     )
+                 ]
+                 )
+    ]
+)
+
+@pytest.mark.parametrize(
+    "filename, expected_workspace",
+    [
+        ("fibonacci", FIBONACCI_WORKSPACE),
+        ("Example1", TEST_WORKSPACE),
+    ]
+)
+def test_slang_parse_file(check_ast_from_file, filename, expected_workspace):
+    check_ast_from_file(filename, expected_workspace)
+@pytest.mark.parametrize(
+    "filename, expected_workspace",
+    [
+        ("fibonacci", FIBONACCI_WORKSPACE),
+        ("Example1", TEST_WORKSPACE),
+    ]
+)
+def test_slang_parse_string(check_ast_from_string,filename, expected_workspace):
+    check_ast_from_string(filename, expected_workspace)

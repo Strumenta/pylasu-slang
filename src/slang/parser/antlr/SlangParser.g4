@@ -19,6 +19,10 @@ function:
         | IF LPAREN condition=expression RPAREN
             (LBRACE positive_branch+=statement* RBRACE | positive_branch+=statement)
             (ELSE (LBRACE negative_branch+=statement* RBRACE | negative_branch+=statement))?    #conditionalStatement
+        | WHILE LPAREN condition=expression RPAREN
+               (LBRACE statements+=statement* RBRACE)                                           #whileStatement
+        | FOR LPAREN variable=NAME COLS start=expression ARR end=expression (COMMA interval=expression)? RPAREN
+               (LBRACE statements+=statement* RBRACE)?                                           #forStatement
         | name=NAME BND value=expression COLON                                                  #bindingStatement
         | expression COLON                                                                      #expressionStatement
         ;

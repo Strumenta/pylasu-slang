@@ -140,3 +140,17 @@ class Reference(Expression):
 @dataclass
 class Literal(Expression):
     value: str = field(default_factory=str)
+
+
+@dataclass
+class WhileLoop(Statement):
+    condition: Optional["Expression"] = field(default=None)
+    statements: List["Statement"] = field(default_factory=list)
+
+@dataclass
+class ForLoop(Statement):
+    variable: str = field(default_factory=str)
+    start: Optional["Expression"] = field(default=None)
+    end: Optional["Expression"] = field(default=None)
+    interval: Optional["Expression"] = field(default=None)
+    statements: List["Statement"] = field(default_factory=list)

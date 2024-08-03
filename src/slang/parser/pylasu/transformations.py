@@ -33,6 +33,8 @@ from slang.ast.nodes import (
     Subtraction,
     UnaryOperation,
     Workspace,
+    WhileLoop,
+    ForLoop
 )
 from slang.parser.antlr.SlangParser import SlangParser as _
 
@@ -196,6 +198,30 @@ def create_slang_parse_tree_to_ast_transformer(issues: Optional[List[Issue]]):
         lambda source: Literal(value=source.value.text),
     )
 
+    #statement - while loop
+    transformer.register_node_factory(
+        _.WhileStatementContext,
+        WhileLoop
+    ).with_child(PropertyRef("condition"), PropertyRef("condition")
+                 ).with_child(PropertyRef("statements"), PropertyRef("statements"))
+
+
+    def for_loop_node_factory(source, transformer):
+        for_loop = ForLoop(
+            variable=source.variable.text,
+            start=transformer.transform(source.start),
+            end=transformer.transform(source.end),
+            interval=transformer.transform(source.interval) if source.interval else 1,
+            statements=[transformer.transform(stmt) for stmt in source.statements]
+        )
+        return for_loop
+
+    # statement - for loop
+    transformer.register_node_factory(
+        _.ForStatementContext,
+        for_loop_node_factory
+    )
+
     return transformer
 
 
@@ -207,14 +233,20 @@ if __name__ == "__main__":
 
     input_stream = InputStream(
         """
-        # this is a comment
-        function example(input) {
-            invocation(1, 2);
-            variable = 1;
-            print 1;
-            print input;
+function test(n)
+{
+    if(n>0)
+    {
+    while (n<5)
+    {
+        for(i:0->n)
+        {
+            print(i);
+            n=n+1;
         }
-        print 1;
+     }
+    }  
+}
     """
     )
     lexer = AntlrLexer(input_stream)
