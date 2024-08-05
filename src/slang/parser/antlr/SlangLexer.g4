@@ -9,6 +9,8 @@ FUNCTION: 'function';
 IF: 'if';
 PRINT: 'print';
 RETURN: 'return';
+WHILE: 'while';
+FOR: 'for';
 
 // operators
 GTQ: '>=';
@@ -23,6 +25,8 @@ SUB: '-';
 MUL: '*';
 DIV: '/';
 BND: '=';
+COLS: ':';
+ARR: '->';
 
 // groupings
 LPAREN: '(';
